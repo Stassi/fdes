@@ -2,12 +2,13 @@ const { expect } = require('chai');
 const { events } = require('../src/events');
 
 describe('events', () => {
-  const event = 'arrival';
-  const ONE_MINUTE = 60000;
+  const { create } = events();
+
+  const [event, oneMinute] = ['arrival', 60000];
   const [eventOne, eventTwo, eventThree] = [
-    { event, time: ONE_MINUTE },
-    { event, time: ONE_MINUTE * 10 },
-    { event, time: ONE_MINUTE * 100 },
+    { event, time: oneMinute },
+    { event, time: oneMinute * 10 },
+    { event, time: oneMinute * 100 },
   ];
 
   describe('#queue', () => {
@@ -18,8 +19,6 @@ describe('events', () => {
   });
 
   describe('#create', () => {
-    const { create } = events();
-
     it('should transform #queue to include a created event', () => {
       const { queue } = create(eventOne);
       expect(queue()).to.include(eventOne);
@@ -43,17 +42,16 @@ describe('events', () => {
   });
 
   describe('#doNext', () => {
-    const { create } = events();
     const { doNext } = create(eventOne)
       .create(eventTwo);
 
-    it('should pass the next event to the provided function', done => {
+    it('should call the provided function with the first queued event', done => {
       doNext(event => {
         if (event === eventOne) done();
       });
     });
 
-    it('should transform #queue to return the remaining queued elements', () => {
+    it('should transform #queue to return queued elements after the first', () => {
       const { queue } = doNext(() => null);
       expect(queue()).to.include(eventTwo);
     });
