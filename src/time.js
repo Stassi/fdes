@@ -7,8 +7,8 @@ const {
 const time = (state = 0) => ({
   now: always(state),
   increment: pipe(
-      add(state),
-      time,
+    add(state),
+    time,
   ),
 });
 
