@@ -46,9 +46,7 @@ describe('events', () => {
       .create(eventTwo);
 
     it('should call the provided function with the first queued event', done => {
-      doNext(event => {
-        if (event === eventOne) done();
-      });
+      doNext(event => event === eventOne ? done() : null);
     });
 
     it('should transform #queue to return queued elements after the first', () => {
