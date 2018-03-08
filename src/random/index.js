@@ -5,16 +5,16 @@ const {
 } = require('ramda');
 const { natural, string } = require('./chance');
 
-const hex16 = (state = NaN) => ({
+const generateSeed = (options = {
+  length: 16,
+  pool: '0123456789abcdef',
+}) => (state = NaN) => ({
   seed: always(state),
   evolve: () => pipe(
-    string({
-      length: 16,
-      pool: '0123456789abcdef',
-    }),
-    hex16,
+    string(options),
+    generateSeed(options),
   )(state),
   natural: flip(natural)(state),
 });
 
-module.exports = { hex16 };
+module.exports = { generateSeed };
