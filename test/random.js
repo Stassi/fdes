@@ -16,13 +16,13 @@ describe('#hex16', () => {
   describe('#evolve', () => {
     describe('#seed generation 1', () => {
       it('should be deterministic when evolved from a known seed', () => {
-        expect(seedGen1()).to.equal('ac7b289790934096');
+        expect(seedGen1()).to.equal('w3q0etvrvbuilbvn');
       });
     });
 
     describe('#seed generation 2 + n', () => {
       it('should be deterministic when chain-evolved from a known seed', () => {
-        expect(seedGen2()).to.equal('ab91fae519c4758d');
+        expect(seedGen2()).to.equal('jk2tuz31dkcd0lld');
       });
     });
   });

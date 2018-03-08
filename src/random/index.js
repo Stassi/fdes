@@ -5,9 +5,11 @@ const {
 } = require('ramda');
 const { natural, string } = require('./chance');
 
+const alphaNumeric = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
 const generateSeed = (options = {
   length: 16,
-  pool: '0123456789abcdef',
+  pool: alphaNumeric,
 }) => (state = NaN) => ({
   seed: always(state),
   evolve: () => pipe(
