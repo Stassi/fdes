@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { generateSeed } = require('../src/random');
 
-describe('#hex16', () => {
+describe('#generateSeed', () => {
   const knownSeed = 'known seed';
   const { seed: seedGen0, evolve: evolveGen0 } = generateSeed()(knownSeed);
   const { seed: seedGen1, evolve: evolveGen1 } = evolveGen0();
