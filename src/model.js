@@ -1,12 +1,18 @@
 const {
   always,
-  assoc,
   dec,
-  equals,
   inc,
   lensProp,
+  not,
   over,
+  pipe,
+  propEq,
 } = require('ramda');
+
+const applyToProp = (toApply, prop, lastPipedFn) => pipe(
+  over(lensProp(prop), toApply),
+  lastPipedFn,
+);
 
 const model = (state = {
   agentAvailable: true,
@@ -14,18 +20,18 @@ const model = (state = {
 }) => ({
   status: always(state),
   arrival: () => {
-    if (state.agentAvailable) {
-      return model(assoc('agentAvailable', false, state));
+    if (propEq('agentAvailable', true, state)) {
+      return applyToProp(not, 'agentAvailable', model)(state);
     } else {
-      return model(over(lensProp('queuedCustomers'), inc, state));
+      return applyToProp(inc, 'queuedCustomers', model)(state);
     }
   },
 
   departure: () => {
-    if (equals(state.queuedCustomers, 0)) {
-      return model(assoc('agentAvailable', true, state));
+    if (propEq('queuedCustomers', 0, state)) {
+      return applyToProp(not, 'agentAvailable', model)(state);
     } else {
-      return model(over(lensProp('queuedCustomers'), dec, state));
+      return applyToProp(dec, 'queuedCustomers', model)(state);
     }
   },
 });
