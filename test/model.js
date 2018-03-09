@@ -27,4 +27,8 @@ describe('model', () => {
       });
     });
   });
+
+  describe('#departure', () => {
+    it('should have tests');
+  });
 });
