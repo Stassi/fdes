@@ -3,7 +3,7 @@ const { model } = require('../src/model');
 
 describe('model', () => {
   describe('#arrival', () => {
-    it('should transform #status to agent busy when agent is available', () => {
+    it('should reflect agent busy when agent is available', () => {
       const { status } = model({
         agentAvailable: true,
         queuedCustomers: 0,
@@ -15,7 +15,7 @@ describe('model', () => {
       });
     });
 
-    it('should transform #status to incremented customers if agent is busy', () => {
+    it('should increment queue when agent is busy', () => {
       const { status } = model({
         agentAvailable: false,
         queuedCustomers: 0,
@@ -29,6 +29,28 @@ describe('model', () => {
   });
 
   describe('#departure', () => {
-    it('should have tests');
+    it('should reflect agent available when queue is empty', () => {
+      const { status } = model({
+        agentAvailable: false,
+        queuedCustomers: 0,
+      }).departure();
+
+      expect(status()).to.include({
+        agentAvailable: true,
+        queuedCustomers: 0,
+      });
+    });
+
+    it('should decrement queue when queue is not empty', () => {
+      const { status } = model({
+        agentAvailable: false,
+        queuedCustomers: 1,
+      }).departure();
+
+      expect(status()).to.include({
+        agentAvailable: false,
+        queuedCustomers: 0,
+      });
+    });
   });
 });

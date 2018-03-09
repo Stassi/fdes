@@ -1,6 +1,8 @@
 const {
   always,
   assoc,
+  dec,
+  equals,
   inc,
   lensProp,
   over,
@@ -19,7 +21,13 @@ const model = (state = {
     }
   },
 
-  // TODO: Implement departure
+  departure: () => {
+    if (equals(state.queuedCustomers, 0)) {
+      return model(assoc('agentAvailable', true, state));
+    } else {
+      return model(over(lensProp('queuedCustomers'), dec, state));
+    }
+  },
 });
 
 module.exports = { model };
