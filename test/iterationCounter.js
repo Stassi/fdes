@@ -3,7 +3,11 @@ const { iterationCounter } = require('../src/iterationCounter');
 
 describe('iterationCounter', () => {
   describe('#increment', () => {
-    it('should have tests');
+    it('should increment iterations +1', () => {
+      const { status } = iterationCounter({ iterations: 0, limit: 5 })
+        .increment();
+      expect(status()).to.contain({ iterations: 1 });
+    });
   });
 
   describe('#limitReached', () => {
