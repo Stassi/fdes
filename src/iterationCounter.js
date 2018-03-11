@@ -1,10 +1,18 @@
 const {
   always,
+  converge,
   inc,
+  gte,
+  prop,
 } = require('ramda');
 const { pipedApplyToProp } = require('./pipedApplyToProp');
 
 const incrementProp = pipedApplyToProp('iterations', inc);
+
+const iterationsGTELimit = converge(gte, [
+  prop('iterations'),
+  prop('limit'),
+]);
 
 const iterationCounter = (state = {
   iterations: 0,
@@ -12,9 +20,7 @@ const iterationCounter = (state = {
 }) => ({
   status: always(state),
   increment: () => incrementProp(iterationCounter)(state),
-
-  // TODO: Implement
-  limitReached: always(null),
+  limitReached: () => iterationsGTELimit(state),
 });
 
 module.exports = { iterationCounter };
