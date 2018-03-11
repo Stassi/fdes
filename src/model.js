@@ -1,5 +1,6 @@
 const {
   always,
+  curry,
   dec,
   ifElse,
   inc,
@@ -10,10 +11,16 @@ const {
   propEq,
 } = require('ramda');
 
-const applyToProp = (prop, toApply, lastPipedFn) => pipe(
+const applyToProp = curry((prop, toApply, lastPipedFn) => pipe(
   over(lensProp(prop), toApply),
   lastPipedFn,
-);
+));
+
+const toggleAgentAvailable = applyToProp('agentAvailable', not);
+const applyToQueuedCustomers = applyToProp('queuedCustomers');
+
+const incrementQueuedCustomers = applyToQueuedCustomers(inc);
+const decrementQueuedCustomers = applyToQueuedCustomers(dec);
 
 const model = (state = {
   agentAvailable: true,
@@ -22,13 +29,13 @@ const model = (state = {
   status: always(state),
   arrival: () => ifElse(
     propEq('agentAvailable', true),
-    applyToProp('agentAvailable', not, model),
-    applyToProp('queuedCustomers', inc, model),
+    toggleAgentAvailable(model),
+    incrementQueuedCustomers(model),
   )(state),
   departure: () => ifElse(
     propEq('queuedCustomers', 0),
-    applyToProp('agentAvailable', not, model),
-    applyToProp('queuedCustomers', dec, model),
+    toggleAgentAvailable(model),
+    decrementQueuedCustomers(model),
   )(state),
 });
 
