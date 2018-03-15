@@ -37,6 +37,16 @@ describe('events', () => {
   });
 
   describe('#doNext', () => {
-    it('should have tests');
+    const { current, queue } = schedule(eventOne)
+      .doNext()
+      .status();
+
+    it('should transfer processed event to property: current', () => {
+      expect(current).to.equal(eventOne);
+    });
+
+    it('should not include the processed event in property: queue', () => {
+      expect(queue).to.not.include(eventOne);
+    });
   });
 });
