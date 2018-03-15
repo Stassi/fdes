@@ -1,31 +1,23 @@
 const {
   always,
-  append,
-  ascend,
-  call,
-  drop,
-  flip,
-  head,
   pipe,
-  prop,
-  sort,
 } = require('ramda');
+const { appendToProp } = require('./appendToProp');
+const { sortPropByKeyAscending } = require('./sortPropByKeyAscending');
 
-const appendTo = flip(append);
-const sortByTimeAscending = sort(ascend(prop('time')));
+const appendToQueue = appendToProp('queue');
+const sortQueueByTimeAscending = sortPropByKeyAscending('queue', 'time');
 
-const events = (state = []) => ({
-  create: pipe(
-    appendTo(state),
-    sortByTimeAscending,
+const events = (state = {
+  current: null,
+  queue: [],
+}) => ({
+  status: always(state),
+  schedule: pipe(
+    appendToQueue(state),
+    sortQueueByTimeAscending,
     events,
   ),
-  doNext: fn => {
-    call(fn, head(state));
-    return events(drop(1, state));
-  },
-
-  queue: always(state),
 });
 
 module.exports = { events };

@@ -1,35 +1,30 @@
 const { expect } = require('chai');
 const { events } = require('../src/events');
 
+const [name, oneMinute] = ['arrival', 60000];
+const [eventOne, eventTwo, eventThree] = [
+  { name, time: oneMinute },
+  { name, time: oneMinute * 10 },
+  { name, time: oneMinute * 100 },
+];
+
 describe('events', () => {
-  const { create } = events();
+  const { schedule } = events();
 
-  const [event, oneMinute] = ['arrival', 60000];
-  const [eventOne, eventTwo, eventThree] = [
-    { event, time: oneMinute },
-    { event, time: oneMinute * 10 },
-    { event, time: oneMinute * 100 },
-  ];
-
-  describe('#queue', () => {
-    const { queue } = events();
-    it('should be an Array', () => {
-      expect(queue()).to.be.an('Array');
-    });
-  });
-
-  describe('#create', () => {
-    it('should transform #queue to include a created event', () => {
-      const { queue } = create(eventOne);
-      expect(queue()).to.include(eventOne);
+  describe('#schedule', () => {
+    it('should transform queue to include a schedule event', () => {
+      const { queue } = schedule(eventOne)
+        .status();
+      expect(queue).to.include(eventOne);
     });
 
-    it('should transform #queue to return created events sorted by time ascending', () => {
-      const { queue } = create(eventThree)
-        .create(eventOne)
-        .create(eventTwo);
+    it('should transform queue to return scheduled events sorted by time ascending', () => {
+      const { queue } = schedule(eventThree)
+        .schedule(eventOne)
+        .schedule(eventTwo)
+        .status();
 
-      expect(queue()).to.include.ordered.members([
+      expect(queue).to.include.ordered.members([
         eventOne,
         eventTwo,
         eventThree,
@@ -42,16 +37,6 @@ describe('events', () => {
   });
 
   describe('#doNext', () => {
-    const { doNext } = create(eventOne)
-      .create(eventTwo);
-
-    it('should call the provided function with the first queued event', done => {
-      doNext(event => event === eventOne ? done() : null);
-    });
-
-    it('should transform #queue to return queued elements after the first', () => {
-      const { queue } = doNext(() => null);
-      expect(queue()).to.include(eventTwo);
-    });
+    it('should have tests');
   });
 });
