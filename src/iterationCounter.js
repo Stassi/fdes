@@ -1,14 +1,14 @@
 const {
   always,
   converge,
-  inc,
   gte,
+  inc,
+  pipe,
   prop,
 } = require('ramda');
-const { pipedApplyToProp } = require('./utilities');
+const { applyToProp } = require('./utilities');
 
-// TODO: Rename incrementProp to incrementIterations
-const incrementProp = pipedApplyToProp('iterations', inc);
+const incrementIterations = applyToProp('iterations', inc);
 
 // TODO: Parameterize prop values, extract to utilities
 const iterationsGTELimit = converge(gte, [
@@ -21,7 +21,10 @@ const iterationCounter = (state = {
   limit: 20,
 }) => ({
   status: always(state),
-  increment: () => incrementProp(iterationCounter)(state),
+  increment: () => pipe(
+    incrementIterations,
+    iterationCounter,
+  )(state),
   limitReached: () => iterationsGTELimit(state),
 });
 

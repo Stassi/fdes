@@ -21,6 +21,11 @@ const appendToProp = curry((property, state, toAppend) => over(
   append(toAppend),
 )(state));
 
+const applyToProp = (property, toApply) => over(
+  lensProp(property),
+  toApply,
+);
+
 const dropPropHead = property => over(
   lensProp(property),
   drop(1),
@@ -47,16 +52,10 @@ const sortPropByKeyAscending = (property, sortKey) => over(
   )(sortKey),
 );
 
-// TODO: Unpipe, rename "prop", rename function
-const pipedApplyToProp = curry((prop, toApply, lastPipedFn) => pipe(
-  over(lensProp(prop), toApply),
-  lastPipedFn,
-));
-
 const utilities = {
   appendToProp,
+  applyToProp,
   dropPropHead,
-  pipedApplyToProp,
   setPropToHead,
   sortPropByKeyAscending,
 };

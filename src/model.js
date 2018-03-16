@@ -4,18 +4,17 @@ const {
   ifElse,
   inc,
   not,
+  pipe,
   propEq,
 } = require('ramda');
-const { pipedApplyToProp } = require('./utilities');
+const { applyToProp } = require('./utilities');
 
 const agentAvailable = propEq('agentAvailable', true);
 const queuedCustomersEmpty = propEq('queuedCustomers', 0);
 
-const toggleAgentAvailable = pipedApplyToProp('agentAvailable', not);
-const applyToQueuedCustomers = pipedApplyToProp('queuedCustomers');
-
-const incrementQueuedCustomers = applyToQueuedCustomers(inc);
-const decrementQueuedCustomers = applyToQueuedCustomers(dec);
+const toggleAgentAvailable = applyToProp('agentAvailable', not);
+const incrementQueuedCustomers = applyToProp('queuedCustomers', inc);
+const decrementQueuedCustomers = applyToProp('queuedCustomers', dec);
 
 const model = (state = {
   agentAvailable: true,
@@ -24,13 +23,13 @@ const model = (state = {
   status: always(state),
   arrival: () => ifElse(
     agentAvailable,
-    toggleAgentAvailable(model),
-    incrementQueuedCustomers(model),
+    pipe(toggleAgentAvailable, model),
+    pipe(incrementQueuedCustomers, model),
   )(state),
   departure: () => ifElse(
     queuedCustomersEmpty,
-    toggleAgentAvailable(model),
-    decrementQueuedCustomers(model),
+    pipe(toggleAgentAvailable, model),
+    pipe(decrementQueuedCustomers, model),
   )(state),
 });
 
