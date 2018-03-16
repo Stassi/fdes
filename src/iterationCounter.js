@@ -6,9 +6,9 @@ const {
   pipe,
   prop,
 } = require('ramda');
-const { applyToProp } = require('./utilities');
+const { applyOverProp } = require('./utilities');
 
-const incrementIterations = applyToProp('iterations', inc);
+const incrementIterations = applyOverProp('iterations', inc);
 
 // TODO: Parameterize prop values, extract to utilities
 const iterationsGTELimit = converge(gte, [

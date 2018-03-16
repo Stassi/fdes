@@ -7,14 +7,14 @@ const {
   pipe,
   propEq,
 } = require('ramda');
-const { applyToProp } = require('./utilities');
+const { applyOverProp } = require('./utilities');
 
 const agentAvailable = propEq('agentAvailable', true);
 const queuedCustomersEmpty = propEq('queuedCustomers', 0);
 
-const toggleAgentAvailable = applyToProp('agentAvailable', not);
-const incrementQueuedCustomers = applyToProp('queuedCustomers', inc);
-const decrementQueuedCustomers = applyToProp('queuedCustomers', dec);
+const toggleAgentAvailable = applyOverProp('agentAvailable', not);
+const incrementQueuedCustomers = applyOverProp('queuedCustomers', inc);
+const decrementQueuedCustomers = applyOverProp('queuedCustomers', dec);
 
 const model = (state = {
   agentAvailable: true,

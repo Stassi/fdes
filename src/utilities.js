@@ -14,12 +14,12 @@ const {
   sort,
 } = require('ramda');
 
-const applyToProp = (property, toApply) => over(
+const applyOverProp = (property, toApply) => over(
   lensProp(property),
   toApply,
 );
 
-const appendToProp = curry((property, state, toAppend) => applyToProp(
+const appendOverProp = curry((property, state, toAppend) => applyOverProp(
   property,
   append(toAppend),
 )(state));
@@ -36,8 +36,8 @@ const setPropToHead = (setProp, collection) => converge(set, [
   identity,
 ]);
 
-const sortPropByKeyAscending = (property, sortKey) => over(
-  lensProp(property),
+const sortPropByKeyAscending = (property, sortKey) => applyOverProp(
+  property,
   pipe(
     prop,
     ascend,
@@ -46,8 +46,8 @@ const sortPropByKeyAscending = (property, sortKey) => over(
 );
 
 const utilities = {
-  appendToProp,
-  applyToProp,
+  appendOverProp,
+  applyOverProp,
   setPropToHead,
   sortPropByKeyAscending,
 };
