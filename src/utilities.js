@@ -4,7 +4,6 @@ const {
   append,
   converge,
   curry,
-  drop,
   head,
   identity,
   lensProp,
@@ -24,11 +23,6 @@ const appendToProp = curry((property, state, toAppend) => over(
 const applyToProp = (property, toApply) => over(
   lensProp(property),
   toApply,
-);
-
-const dropPropHead = property => over(
-  lensProp(property),
-  drop(1),
 );
 
 const setPropToHead = (setProp, collection) => converge(set, [
@@ -55,7 +49,6 @@ const sortPropByKeyAscending = (property, sortKey) => over(
 const utilities = {
   appendToProp,
   applyToProp,
-  dropPropHead,
   setPropToHead,
   sortPropByKeyAscending,
 };

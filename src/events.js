@@ -1,18 +1,19 @@
 const {
   always,
+  drop,
   pipe,
 } = require('ramda');
 const {
   appendToProp,
-  dropPropHead,
+  applyToProp,
   setPropToHead,
   sortPropByKeyAscending,
 } = require('./utilities');
 
+const setCurrentToQueueHead = setPropToHead('current', 'queue');
+const dropQueueHead = applyToProp('queue', drop(1));
 const appendToQueue = appendToProp('queue');
 const sortQueueByTimeAscending = sortPropByKeyAscending('queue', 'time');
-const setCurrentToQueueHead = setPropToHead('current', 'queue');
-const dropQueueHead = dropPropHead('queue');
 
 const events = (state = {
   current: null,
