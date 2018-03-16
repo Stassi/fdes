@@ -14,16 +14,15 @@ const {
   sort,
 } = require('ramda');
 
-// TODO: Attempt state argument removal, attempt uncurry
-const appendToProp = curry((property, state, toAppend) => over(
-  lensProp(property),
-  append(toAppend),
-)(state));
-
 const applyToProp = (property, toApply) => over(
   lensProp(property),
   toApply,
 );
+
+const appendToProp = curry((property, state, toAppend) => applyToProp(
+  property,
+  append(toAppend),
+)(state));
 
 const setPropToHead = (setProp, collection) => converge(set, [
   pipe(
