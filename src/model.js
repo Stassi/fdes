@@ -13,8 +13,9 @@ const agentAvailable = propEq('agentAvailable', true);
 const queuedCustomersEmpty = propEq('queuedCustomers', 0);
 
 const toggleAgentAvailable = applyOverProp('agentAvailable', not);
-const incrementQueuedCustomers = applyOverProp('queuedCustomers', inc);
-const decrementQueuedCustomers = applyOverProp('queuedCustomers', dec);
+const applyOverQueuedCustomers = applyOverProp('queuedCustomers');
+const incrementQueuedCustomers = applyOverQueuedCustomers(inc);
+const decrementQueuedCustomers = applyOverQueuedCustomers(dec);
 
 const model = (state = {
   agentAvailable: true,
