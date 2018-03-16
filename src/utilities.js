@@ -1,7 +1,5 @@
 const {
   always,
-  ascend,
-  append,
   converge,
   curry,
   head,
@@ -11,18 +9,13 @@ const {
   pipe,
   prop,
   set,
-  sort,
 } = require('ramda');
 
-const applyOverProp = (property, toApply) => over(
+const applyOverProp = curry((property, toApply, state) => over(
   lensProp(property),
   toApply,
-);
-
-const appendOverProp = curry((property, state, toAppend) => applyOverProp(
-  property,
-  append(toAppend),
-)(state));
+  state,
+));
 
 const setPropToHead = (setProp, collection) => converge(set, [
   pipe(
@@ -36,20 +29,9 @@ const setPropToHead = (setProp, collection) => converge(set, [
   identity,
 ]);
 
-const sortPropByKeyAscending = (property, sortKey) => applyOverProp(
-  property,
-  pipe(
-    prop,
-    ascend,
-    sort,
-  )(sortKey),
-);
-
 const utilities = {
-  appendOverProp,
   applyOverProp,
   setPropToHead,
-  sortPropByKeyAscending,
 };
 
 module.exports = utilities;

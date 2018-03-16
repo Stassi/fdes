@@ -1,19 +1,33 @@
 const {
   always,
+  append,
+  ascend,
+  curry,
   drop,
   pipe,
+  prop,
+  sort,
 } = require('ramda');
 const {
-  appendOverProp,
   applyOverProp,
   setPropToHead,
-  sortPropByKeyAscending,
 } = require('./utilities');
 
+const applyOverQueue = applyOverProp('queue');
+const dropQueueHead = applyOverQueue(drop(1));
+const appendToQueue = curry((state, toAppend) => applyOverQueue(
+  append(toAppend),
+  state,
+));
+
+const sortByTimeAscending = pipe(
+  prop,
+  ascend,
+  sort,
+)('time');
+const sortQueueByTimeAscending = applyOverQueue(sortByTimeAscending);
+
 const setCurrentToQueueHead = setPropToHead('current', 'queue');
-const dropQueueHead = applyOverProp('queue', drop(1));
-const appendToQueue = appendOverProp('queue');
-const sortQueueByTimeAscending = sortPropByKeyAscending('queue', 'time');
 
 const events = (state = {
   current: null,
