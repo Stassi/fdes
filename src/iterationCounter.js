@@ -5,10 +5,12 @@ const {
   gte,
   prop,
 } = require('ramda');
-const { pipedApplyToProp } = require('./pipedApplyToProp');
+const { pipedApplyToProp } = require('./utilities');
 
+// TODO: Rename incrementProp to incrementIterations
 const incrementProp = pipedApplyToProp('iterations', inc);
 
+// TODO: Parameterize prop values, extract to utilities
 const iterationsGTELimit = converge(gte, [
   prop('iterations'),
   prop('limit'),

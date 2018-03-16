@@ -6,7 +6,7 @@ const {
   not,
   propEq,
 } = require('ramda');
-const { pipedApplyToProp } = require('./pipedApplyToProp');
+const { pipedApplyToProp } = require('./utilities');
 
 const agentAvailable = propEq('agentAvailable', true);
 const queuedCustomersEmpty = propEq('queuedCustomers', 0);

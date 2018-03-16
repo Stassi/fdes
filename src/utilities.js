@@ -15,6 +15,7 @@ const {
   sort,
 } = require('ramda');
 
+// TODO: Attempt state argument removal, attempt uncurry
 const appendToProp = curry((property, state, toAppend) => over(
   lensProp(property),
   append(toAppend),
@@ -46,9 +47,16 @@ const sortPropByKeyAscending = (property, sortKey) => over(
   )(sortKey),
 );
 
+// TODO: Unpipe, rename "prop", rename function
+const pipedApplyToProp = curry((prop, toApply, lastPipedFn) => pipe(
+  over(lensProp(prop), toApply),
+  lastPipedFn,
+));
+
 const utilities = {
   appendToProp,
   dropPropHead,
+  pipedApplyToProp,
   setPropToHead,
   sortPropByKeyAscending,
 };
