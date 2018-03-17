@@ -23,6 +23,11 @@ const callProp = property => pipe(
   call,
 );
 
+const callMethodOverProp = (property, methodProp) => applyOverProp(
+  property,
+  callProp(methodProp),
+);
+
 const setPropToHead = (setProp, collection) => converge(set, [
   pipe(
     lensProp,
@@ -37,7 +42,7 @@ const setPropToHead = (setProp, collection) => converge(set, [
 
 const utilities = {
   applyOverProp,
-  callProp,
+  callMethodOverProp,
   setPropToHead,
 };
 

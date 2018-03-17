@@ -12,7 +12,7 @@ const {
   model,
   randomSeed,
 } = require('./components');
-const { applyOverProp, callProp } = require('./utilities');
+const { callMethodOverProp } = require('./utilities');
 
 const iterationLimitReached = pipe(
   path(['iterationCounter', 'limitReached']),
@@ -21,19 +21,26 @@ const iterationLimitReached = pipe(
 
 // TODO: Implement all
 const statistics = identity;
-const mainThread = identity;
+const updateClockTime = identity;
+const performEvent = identity;
 
-const callIncrement = callProp('increment');
-const applyOverIterationCounter = applyOverProp('iterationCounter');
-const incrementIterations = applyOverIterationCounter(callIncrement);
+const doNextEvent = callMethodOverProp('events', 'doNext');
+const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
+
+const initialEvent = { name: 'arrival', time: 0 };
 
 const simulate = (state = {
+  clock: clock(),
+  events: events()
+    .schedule(initialEvent),
   iterationCounter: iterationCounter(),
 }) => ifElse(
   iterationLimitReached,
   statistics,
   pipe(
-    mainThread,
+    doNextEvent,
+    updateClockTime,
+    performEvent,
     incrementIterations,
     simulate,
   ),
