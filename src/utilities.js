@@ -1,5 +1,6 @@
 const {
   always,
+  call,
   converge,
   curry,
   head,
@@ -17,6 +18,11 @@ const applyOverProp = curry((property, toApply, state) => over(
   state,
 ));
 
+const callProp = property => pipe(
+  prop(property),
+  call,
+);
+
 const setPropToHead = (setProp, collection) => converge(set, [
   pipe(
     lensProp,
@@ -31,6 +37,7 @@ const setPropToHead = (setProp, collection) => converge(set, [
 
 const utilities = {
   applyOverProp,
+  callProp,
   setPropToHead,
 };
 
