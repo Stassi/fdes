@@ -7,7 +7,7 @@ const {
   pipe,
   propEq,
 } = require('ramda');
-const { applyOverProp } = require('./utilities');
+const { applyOverProp } = require('../utilities');
 
 const agentAvailable = propEq('agentAvailable', true);
 const queuedCustomersEmpty = propEq('queuedCustomers', 0);

@@ -9,7 +9,7 @@ const invokeChance = curry((method, options, seed) => invoker(1, method)(
 const chance = {
   natural: invokeChance('natural'),
   normal: invokeChance('normal'),
-  random: invokeChance('random'),
+  random: invokeChance('randomSeed'),
   string: invokeChance('string'),
 };
 

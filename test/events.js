@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { events } = require('../src/events');
+const { events } = require('../src/components/events');
 
 const [name, oneMinute] = ['arrival', 60000];
 const [eventOne, eventTwo, eventThree] = [

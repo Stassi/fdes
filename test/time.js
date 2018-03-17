@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { time } = require('../src/time');
+const { time } = require('../src/components/time');
 
 describe('time', () => {
   describe('#now', () => {

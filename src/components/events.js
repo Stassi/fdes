@@ -11,7 +11,7 @@ const {
 const {
   applyOverProp,
   setPropToHead,
-} = require('./utilities');
+} = require('../utilities');
 
 const applyOverQueue = applyOverProp('queue');
 const dropQueueHead = applyOverQueue(drop(1));

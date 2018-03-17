@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { model } = require('../src/model');
+const { model } = require('../src/components/model');
 
 describe('model', () => {
   describe('#arrival', () => {

@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { iterationCounter } = require('../src/iterationCounter');
+const { iterationCounter } = require('../src/components/iterationCounter');
 
 describe('iterationCounter', () => {
   describe('#increment', () => {

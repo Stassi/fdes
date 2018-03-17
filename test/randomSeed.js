@@ -1,9 +1,9 @@
 const { expect } = require('chai');
-const { generateSeed } = require('../src/random');
+const { randomSeed } = require('../src/components/randomSeed');
 
-describe('generateSeed', () => {
+describe('randomSeed', () => {
   const knownSeed = 'known seed';
-  const { seed: seedGen0, evolve: evolveGen0 } = generateSeed()(knownSeed);
+  const { seed: seedGen0, evolve: evolveGen0 } = randomSeed()(knownSeed);
   const { seed: seedGen1, evolve: evolveGen1 } = evolveGen0();
   const { seed: seedGen2 } = evolveGen1();
 

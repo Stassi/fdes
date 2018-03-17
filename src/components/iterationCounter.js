@@ -6,7 +6,7 @@ const {
   pipe,
   prop,
 } = require('ramda');
-const { applyOverProp } = require('./utilities');
+const { applyOverProp } = require('../utilities');
 
 const incrementIterations = applyOverProp('iterations', inc);
 
