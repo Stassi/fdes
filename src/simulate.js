@@ -27,7 +27,6 @@ const callIncrement = callProp('increment');
 const applyOverIterationCounter = applyOverProp('iterationCounter');
 const incrementIterations = applyOverIterationCounter(callIncrement);
 
-// TODO: Implement main thread, integrate components
 const simulate = (state = {
   iterationCounter: iterationCounter(),
 }) => ifElse(
