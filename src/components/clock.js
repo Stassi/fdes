@@ -4,12 +4,12 @@ const {
   pipe,
 } = require('ramda');
 
-const time = (state = 0) => ({
+const clock = (state = 0) => ({
   now: always(state),
   increment: pipe(
     add(state),
-    time,
+    clock,
   ),
 });
 
-module.exports = { time };
+module.exports = { clock };

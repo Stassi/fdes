@@ -1,9 +1,9 @@
 const { expect } = require('chai');
-const { time } = require('../src/components/time');
+const { clock } = require('../src/components/clock');
 
-describe('time', () => {
+describe('clock', () => {
   describe('#now', () => {
-    const { now } = time();
+    const { now } = clock();
     it('should be a Number', () => {
       expect(now()).to.be.a('Number');
     });
@@ -11,7 +11,7 @@ describe('time', () => {
 
   describe('#increment', () => {
     const ONE_MINUTE = 60000;
-    const { increment } = time(0);
+    const { increment } = clock(0);
     const { now } = increment(ONE_MINUTE);
 
     it('should transform #now to return incremented state', () => {

@@ -6,11 +6,11 @@ const {
   pipe,
 }  = require('ramda');
 const {
+  clock,
   events,
   iterationCounter,
   model,
   randomSeed,
-  time,
 } = require('./components');
 const { applyOverProp, callProp } = require('./utilities');
 
