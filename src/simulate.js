@@ -12,19 +12,29 @@ const {
   model,
   randomSeed,
 } = require('./components');
-const { callMethodOverProp } = require('./utilities');
+const {
+  callPath,
+  callMethodOverProp,
+  convergeSetProp,
+} = require('./utilities');
 
 const iterationLimitReached = pipe(
   path(['iterationCounter', 'limitReached']),
   call,
 );
 
+const createClockWithEventTime = pipe(
+  callPath(['events', 'status']),
+  path(['current', 'time']),
+  clock,
+);
+
 // TODO: Implement all
 const statistics = identity;
-const updateClockTime = identity;
 const performEvent = identity;
 
 const doNextEvent = callMethodOverProp('events', 'doNext');
+const setClockTime = convergeSetProp('clock', createClockWithEventTime);
 const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
 
 const initialEvent = { name: 'arrival', time: 0 };
@@ -39,7 +49,7 @@ const simulate = (state = {
   statistics,
   pipe(
     doNextEvent,
-    updateClockTime,
+    setClockTime,
     performEvent,
     incrementIterations,
     simulate,

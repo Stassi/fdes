@@ -7,6 +7,7 @@ const {
   identity,
   lensProp,
   over,
+  path,
   pipe,
   prop,
   set,
@@ -18,6 +19,11 @@ const applyOverProp = curry((property, toApply, state) => over(
   state,
 ));
 
+const callPath = pathToCall => pipe(
+  path(pathToCall),
+  call,
+);
+
 const callProp = property => pipe(
   prop(property),
   call,
@@ -27,6 +33,15 @@ const callMethodOverProp = (property, methodProp) => applyOverProp(
   property,
   callProp(methodProp),
 );
+
+const convergeSetProp = (property, toSet) => converge(set, [
+  pipe(
+    lensProp,
+    always,
+  )(property),
+  toSet,
+  identity,
+]);
 
 const setPropToHead = (setProp, collection) => converge(set, [
   pipe(
@@ -43,6 +58,8 @@ const setPropToHead = (setProp, collection) => converge(set, [
 const utilities = {
   applyOverProp,
   callMethodOverProp,
+  callPath,
+  convergeSetProp,
   setPropToHead,
 };
 
