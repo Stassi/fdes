@@ -3,7 +3,6 @@ const {
   call,
   converge,
   curry,
-  head,
   identity,
   lensProp,
   over,
@@ -43,24 +42,11 @@ const convergeSetProp = (property, toSet) => converge(set, [
   identity,
 ]);
 
-const setPropToHead = (setProp, collection) => converge(set, [
-  pipe(
-    lensProp,
-    always,
-  )(setProp),
-  pipe(
-    prop(collection),
-    head,
-  ),
-  identity,
-]);
-
 const utilities = {
   applyOverProp,
   callMethodOverProp,
   callPath,
   convergeSetProp,
-  setPropToHead,
 };
 
 module.exports = utilities;

@@ -4,14 +4,23 @@ const {
   ascend,
   curry,
   drop,
+  head,
   pipe,
   prop,
   sort,
 } = require('ramda');
 const {
   applyOverProp,
-  setPropToHead,
+  convergeSetProp,
 } = require('../utilities');
+
+const setCurrentToQueueHead = convergeSetProp(
+  'current',
+  pipe(
+    prop('queue'),
+    head,
+  ),
+);
 
 const applyOverQueue = applyOverProp('queue');
 const dropQueueHead = applyOverQueue(drop(1));
@@ -19,15 +28,11 @@ const appendToQueue = curry((state, toAppend) => applyOverQueue(
   append(toAppend),
   state,
 ));
-
-const sortByTimeAscending = pipe(
+const sortQueueByTimeAscending = applyOverQueue(pipe(
   prop,
   ascend,
   sort,
-)('time');
-const sortQueueByTimeAscending = applyOverQueue(sortByTimeAscending);
-
-const setCurrentToQueueHead = setPropToHead('current', 'queue');
+)('time'));
 
 const events = (state = {
   current: null,
