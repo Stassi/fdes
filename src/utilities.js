@@ -23,6 +23,11 @@ const callPath = pathToCall => pipe(
   call,
 );
 
+const callPathWithArg = curry((pathToCall, arg, state) => call(
+  path(pathToCall, state),
+  arg,
+));
+
 const callProp = property => pipe(
   prop(property),
   call,
@@ -46,6 +51,7 @@ const utilities = {
   applyOverProp,
   callMethodOverProp,
   callPath,
+  callPathWithArg,
   convergeSetProp,
 };
 
