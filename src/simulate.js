@@ -1,5 +1,4 @@
 const {
-  call,
   cond,
   equals,
   identity,
@@ -21,12 +20,7 @@ const {
   convergeSetProp,
 } = require('./utilities');
 
-// TODO: Replace with callPath
-const iterationLimitReached = pipe(
-  path(['iterationCounter', 'limitReached']),
-  call,
-);
-
+const iterationLimitReached = callPath(['iterationCounter', 'limitReached']);
 const eventsStatus = callPath(['events', 'status']);
 
 const useEventTimeAsClockTime = pipe(
