@@ -1,5 +1,4 @@
 const {
-  always,
   call,
   cond,
   equals,
@@ -7,6 +6,7 @@ const {
   ifElse,
   path,
   pipe,
+  T,
 }  = require('ramda');
 const {
   clock,
@@ -49,18 +49,19 @@ const ifArrival = eventNameEquals('arrival');
 const ifDeparture = eventNameEquals('departure');
 
 // TODO: Implement all
-const onArrival = identity;
-const onDeparture = identity;
+const doArrival = identity;
+const doDeparture = identity;
 const statistics = identity;
 
-// TODO: Complete implementation && rename function
-// const performEvent = cond([
-//   [ifArrival, onArrival],
-//   [ifDeparture, onDeparture],
-// ]);
-const performEvent = identity;
+const doEvent = cond([
+  [ifArrival, doArrival],
+  [ifDeparture, doDeparture],
 
-const doNextEvent = callMethodOverProp('events', 'doNext');
+  // TODO: Remove upon implementation of previous conditions
+  [T, identity],
+]);
+
+const loadNextEvent = callMethodOverProp('events', 'doNext');
 const setClockTime = convergeSetProp('clock', useEventTimeAsClockTime);
 const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
 
@@ -75,9 +76,9 @@ const simulate = (state = {
   iterationLimitReached,
   statistics,
   pipe(
-    doNextEvent,
+    loadNextEvent,
     setClockTime,
-    performEvent,
+    doEvent,
     incrementIterations,
     simulate,
   ),
