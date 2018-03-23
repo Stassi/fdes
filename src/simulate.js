@@ -42,10 +42,20 @@ const eventNameEquals = name => pipe(
 const ifArrival = eventNameEquals('arrival');
 const ifDeparture = eventNameEquals('departure');
 
+const registerArrivalInModel = callMethodOverProp('model', 'arrival');
+const registerDepartureInModel = callMethodOverProp('model', 'departure');
+
 // TODO: Implement all
-const doArrival = identity;
+const scheduleArrival = identity;
+const scheduleDeparture = identity;
 const doDeparture = identity;
 const statistics = identity;
+
+const doArrival = pipe(
+  registerArrivalInModel,
+  scheduleArrival,
+  scheduleDeparture,
+);
 
 const doEvent = cond([
   [ifArrival, doArrival],
@@ -66,6 +76,7 @@ const simulate = (state = {
   events: events()
     .schedule(initialEvent),
   iterationCounter: iterationCounter(),
+  model: model(),
 }) => ifElse(
   iterationLimitReached,
   statistics,
