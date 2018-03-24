@@ -1,5 +1,8 @@
 const {
+  add,
+  applySpec,
   cond,
+  converge,
   equals,
   identity,
   ifElse,
@@ -25,10 +28,9 @@ const {
 const iterationLimitReached = callPath(['iterationCounter', 'limitReached']);
 const eventsStatus = callPath(['events', 'status']);
 
-const useEventTimeAsClockTime = pipe(
+const eventTime = pipe(
   eventsStatus,
   path(['current', 'time']),
-  clock,
 );
 
 const eventName = pipe(
@@ -49,12 +51,13 @@ const registerDepartureInModel = callMethodOverProp('model', 'departure');
 const registerArrivalInModel = callMethodOverProp('model', 'arrival');
 
 // TODO: Implement all
-const scheduleArrival = identity;
 const scheduleDeparture = identity;
 const doDeparture = identity;
 const statistics = identity;
 
+// TODO: Pipe evolveSeed call before retrieving any random value
 const randomNatural = callPathWithArg(['randomSeed', 'natural']);
+const scheduleEvent = callPathWithArg(['events', 'schedule']);
 
 const minutesToMilliseconds = multiply(60000);
 
@@ -64,8 +67,24 @@ const interArrivalOptions = {
   max: minutesToMilliseconds(20),
 };
 
-// TODO: Integrate interArrivalTime within scheduleArrival
 const interArrivalTime = randomNatural(interArrivalOptions);
+
+const nextArrivalTime = converge(add, [
+  interArrivalTime,
+  eventTime,
+]);
+
+const nextArrival = applySpec({
+  name: eventName,
+  time: nextArrivalTime,
+});
+
+// TODO: Inline or rename-disambiguate similar names
+const scheduleNextArrival = converge(scheduleEvent, [
+  nextArrival,
+  identity,
+]);
+const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
 
 const doArrival = pipe(
   registerArrivalInModel,
@@ -81,8 +100,13 @@ const doEvent = cond([
   [T, identity],
 ]);
 
-const loadNextEvent = callMethodOverProp('events', 'doNext');
+const useEventTimeAsClockTime = pipe(
+  eventTime,
+  clock,
+);
 const setClockTime = convergeSetProp('clock', useEventTimeAsClockTime);
+
+const loadNextEvent = callMethodOverProp('events', 'doNext');
 const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
 
 // TODO: Parameterize initial values
