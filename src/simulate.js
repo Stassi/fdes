@@ -46,16 +46,17 @@ const eventNameEquals = name => pipe(
 const ifArrival = eventNameEquals('arrival');
 const ifDeparture = eventNameEquals('departure');
 
-// TODO: Integrate
-const registerDepartureInModel = callMethodOverProp('model', 'departure');
 const registerArrivalInModel = callMethodOverProp('model', 'arrival');
+
+// TODO: Integrate all
+const registerDepartureInModel = callMethodOverProp('model', 'departure');
+const evolveSeed = callMethodOverProp('randomSeed', 'evolve');
 
 // TODO: Implement all
 const scheduleDeparture = identity;
 const doDeparture = identity;
 const statistics = identity;
 
-// TODO: Pipe evolveSeed call before retrieving any random value
 const randomNatural = callPathWithArg(['randomSeed', 'natural']);
 const scheduleEvent = callPathWithArg(['events', 'schedule']);
 
@@ -86,6 +87,7 @@ const scheduleNextArrival = converge(scheduleEvent, [
 ]);
 const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
 
+// TODO: Pipe evolveSeed before scheduling each arrival and departure
 const doArrival = pipe(
   registerArrivalInModel,
   scheduleArrival,
@@ -119,8 +121,7 @@ const simulate = (state = {
     .schedule(initialEvent),
   iterationCounter: iterationCounter(),
   model: model(),
-  randomSeed: randomSeed()(initialSeed)
-    .evolve(),
+  randomSeed: randomSeed()(initialSeed),
 }) => ifElse(
   iterationLimitReached,
   statistics,
