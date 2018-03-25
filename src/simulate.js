@@ -46,10 +46,10 @@ const eventNameEquals = name => pipe(
 const ifArrival = eventNameEquals('arrival');
 const ifDeparture = eventNameEquals('departure');
 
-const registerArrivalInModel = callMethodOverProp('model', 'arrival');
-
-// TODO: Integrate all
+// TODO: Integrate
 const registerDepartureInModel = callMethodOverProp('model', 'departure');
+
+const registerArrivalInModel = callMethodOverProp('model', 'arrival');
 const evolveSeed = callMethodOverProp('randomSeed', 'evolve');
 
 // TODO: Implement all
@@ -87,10 +87,11 @@ const scheduleNextArrival = converge(scheduleEvent, [
 ]);
 const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
 
-// TODO: Pipe evolveSeed before scheduling each arrival and departure
 const doArrival = pipe(
   registerArrivalInModel,
+  evolveSeed,
   scheduleArrival,
+  evolveSeed,
   scheduleDeparture,
 );
 
