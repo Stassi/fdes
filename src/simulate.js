@@ -1,5 +1,6 @@
 const {
   add,
+  always,
   applySpec,
   cond,
   converge,
@@ -53,7 +54,6 @@ const registerArrivalInModel = callMethodOverProp('model', 'arrival');
 const evolveSeed = callMethodOverProp('randomSeed', 'evolve');
 
 // TODO: Implement all
-const scheduleDeparture = identity;
 const doDeparture = identity;
 const statistics = identity;
 
@@ -68,24 +68,47 @@ const interArrivalOptions = {
   max: minutesToMilliseconds(20),
 };
 
+// TODO: Parameterize
+const interDepartureOptions = {
+  min: minutesToMilliseconds(3),
+  max: minutesToMilliseconds(17),
+};
+
 const interArrivalTime = randomNatural(interArrivalOptions);
+const interDepartureTime = randomNatural(interDepartureOptions);
 
 const nextArrivalTime = converge(add, [
   interArrivalTime,
   eventTime,
 ]);
 
+const nextDepartureTime = converge(add, [
+  interDepartureTime,
+  eventTime,
+]);
+
 const nextArrival = applySpec({
-  name: eventName,
+  name: always('arrival'),
   time: nextArrivalTime,
 });
 
-// TODO: Inline or rename-disambiguate similar names
+const nextDeparture = applySpec({
+  name: always('departure'),
+  time: nextDepartureTime,
+});
+
 const scheduleNextArrival = converge(scheduleEvent, [
   nextArrival,
   identity,
 ]);
+
+const scheduleNextDeparture = converge(scheduleEvent, [
+  nextDeparture,
+  identity,
+]);
+
 const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
+const scheduleDeparture = convergeSetProp('events', scheduleNextDeparture);
 
 const doArrival = pipe(
   registerArrivalInModel,
