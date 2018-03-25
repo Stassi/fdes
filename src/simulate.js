@@ -92,6 +92,10 @@ const scheduleNextDeparture = scheduleNextEvent(
   }),
 );
 
+// TODO: Parameterize initial values
+const initialEvent = { name: 'arrival', time: 0 };
+const initialSeed = NaN;
+
 const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
 const scheduleDeparture = convergeSetProp('events', scheduleNextDeparture);
 
@@ -107,10 +111,6 @@ const doEvent = cond([
   [ifArrival, doArrival],
   [ifDeparture, registerDepartureInModel],
 ]);
-
-// TODO: Parameterize initial values
-const initialEvent = { name: 'arrival', time: 0 };
-const initialSeed = NaN;
 
 // TODO: Implement
 const statistics = identity;
