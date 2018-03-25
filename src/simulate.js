@@ -29,18 +29,18 @@ const {
 const iterationLimitReached = callPath(['iterationCounter', 'limitReached']);
 const eventsStatus = callPath(['events', 'status']);
 
-const eventTime = pipe(
+const currentEventTime = pipe(
   eventsStatus,
   path(['current', 'time']),
 );
 
-const eventName = pipe(
+const currentEventName = pipe(
   eventsStatus,
   path(['current', 'name']),
 );
 
 const eventNameEquals = name => pipe(
-  eventName,
+  currentEventName,
   equals(name),
 );
 
@@ -62,50 +62,34 @@ const scheduleEvent = callPathWithArg(['events', 'schedule']);
 
 const minutesToMilliseconds = multiply(60000);
 
-// TODO: Parameterize
-const interArrivalOptions = {
-  min: minutesToMilliseconds(2),
-  max: minutesToMilliseconds(20),
-};
-
-// TODO: Parameterize
-const interDepartureOptions = {
-  min: minutesToMilliseconds(3),
-  max: minutesToMilliseconds(17),
-};
-
-const interArrivalTime = randomNatural(interArrivalOptions);
-const interDepartureTime = randomNatural(interDepartureOptions);
-
-const nextArrivalTime = converge(add, [
-  interArrivalTime,
-  eventTime,
-]);
-
-const nextDepartureTime = converge(add, [
-  interDepartureTime,
-  eventTime,
-]);
-
-const nextArrival = applySpec({
-  name: always('arrival'),
-  time: nextArrivalTime,
-});
-
-const nextDeparture = applySpec({
-  name: always('departure'),
-  time: nextDepartureTime,
-});
-
-const scheduleNextArrival = converge(scheduleEvent, [
-  nextArrival,
+const scheduleNextEvent = (name, interEventTime) => converge(scheduleEvent, [
+  applySpec({
+    name: always(name),
+    time: converge(add, [
+      interEventTime,
+      currentEventTime,
+    ]),
+  }),
   identity,
 ]);
 
-const scheduleNextDeparture = converge(scheduleEvent, [
-  nextDeparture,
-  identity,
-]);
+// TODO: Parameterize
+const scheduleNextArrival = scheduleNextEvent(
+  'arrival',
+  randomNatural({
+    min: minutesToMilliseconds(2),
+    max: minutesToMilliseconds(20),
+  }),
+);
+
+// TODO: Parameterize
+const scheduleNextDeparture = scheduleNextEvent(
+  'departure',
+  randomNatural({
+    min: minutesToMilliseconds(3),
+    max: minutesToMilliseconds(17),
+  }),
+);
 
 const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
 const scheduleDeparture = convergeSetProp('events', scheduleNextDeparture);
@@ -126,11 +110,11 @@ const doEvent = cond([
   [T, identity],
 ]);
 
-const useEventTimeAsClockTime = pipe(
-  eventTime,
+const useCurrentEventTimeAsClockTime = pipe(
+  currentEventTime,
   clock,
 );
-const setClockTime = convergeSetProp('clock', useEventTimeAsClockTime);
+const setClockTime = convergeSetProp('clock', useCurrentEventTimeAsClockTime);
 
 const loadNextEvent = callMethodOverProp('events', 'doNext');
 const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
