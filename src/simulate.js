@@ -10,7 +10,6 @@ const {
   multiply,
   path,
   pipe,
-  T,
 }  = require('ramda');
 const {
   clock,
@@ -47,20 +46,20 @@ const eventNameEquals = name => pipe(
 const ifArrival = eventNameEquals('arrival');
 const ifDeparture = eventNameEquals('departure');
 
-// TODO: Integrate
-const registerDepartureInModel = callMethodOverProp('model', 'departure');
-
 const registerArrivalInModel = callMethodOverProp('model', 'arrival');
+const registerDepartureInModel = callMethodOverProp('model', 'departure');
 const evolveSeed = callMethodOverProp('randomSeed', 'evolve');
+const loadNextEvent = callMethodOverProp('events', 'doNext');
+const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
 
-// TODO: Implement all
-const doDeparture = identity;
-const statistics = identity;
+const useCurrentEventTimeAsClockTime = pipe(
+  currentEventTime,
+  clock,
+);
+const setClockTime = convergeSetProp('clock', useCurrentEventTimeAsClockTime);
 
-const randomNatural = callPathWithArg(['randomSeed', 'natural']);
 const scheduleEvent = callPathWithArg(['events', 'schedule']);
-
-const minutesToMilliseconds = multiply(60000);
+const randomNatural = callPathWithArg(['randomSeed', 'natural']);
 
 const scheduleNextEvent = (name, interEventTime) => converge(scheduleEvent, [
   applySpec({
@@ -72,6 +71,8 @@ const scheduleNextEvent = (name, interEventTime) => converge(scheduleEvent, [
   }),
   identity,
 ]);
+
+const minutesToMilliseconds = multiply(60000);
 
 // TODO: Parameterize
 const scheduleNextArrival = scheduleNextEvent(
@@ -104,24 +105,15 @@ const doArrival = pipe(
 
 const doEvent = cond([
   [ifArrival, doArrival],
-  [ifDeparture, doDeparture],
-
-  // TODO: Remove upon implementation of previous conditions
-  [T, identity],
+  [ifDeparture, registerDepartureInModel],
 ]);
-
-const useCurrentEventTimeAsClockTime = pipe(
-  currentEventTime,
-  clock,
-);
-const setClockTime = convergeSetProp('clock', useCurrentEventTimeAsClockTime);
-
-const loadNextEvent = callMethodOverProp('events', 'doNext');
-const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
 
 // TODO: Parameterize initial values
 const initialEvent = { name: 'arrival', time: 0 };
 const initialSeed = NaN;
+
+// TODO: Implement
+const statistics = identity;
 
 const simulate = (state = {
   clock: clock(),
