@@ -100,14 +100,14 @@ const scheduleDeparture = convergeSetProp(
   ]),
 );
 
-const doArrival = pipe(
+const registerArrivalAndDoScheduling = pipe(
   registerArrivalInModel,
   scheduleArrival,
   scheduleDeparture,
 );
 
 const doEvent = cond([
-  [ifArrival, doArrival],
+  [ifArrival, registerArrivalAndDoScheduling],
   [ifDeparture, registerDepartureInModel],
 ]);
 
