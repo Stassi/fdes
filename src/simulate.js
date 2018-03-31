@@ -12,7 +12,6 @@ const {
   pipe,
 }  = require('ramda');
 const {
-  clock,
   events,
   iterationCounter,
   model,
@@ -51,12 +50,6 @@ const registerDepartureInModel = callMethodOverProp('model', 'departure');
 const evolveSeed = callMethodOverProp('randomSeed', 'evolve');
 const loadNextEvent = callMethodOverProp('events', 'doNext');
 const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
-
-const useCurrentEventTimeAsClockTime = pipe(
-  currentEventTime,
-  clock,
-);
-const setClockTime = convergeSetProp('clock', useCurrentEventTimeAsClockTime);
 
 const scheduleEvent = callPathWithArg(['events', 'schedule']);
 const randomNatural = callPathWithArg(['randomSeed', 'natural']);
@@ -124,7 +117,6 @@ const doEvent = cond([
 const statistics = identity;
 
 const simulate = (state = {
-  clock: clock(),
   events: events()
     .schedule(initialEvent),
   iterationCounter: iterationCounter(),
@@ -135,7 +127,6 @@ const simulate = (state = {
   statistics,
   pipe(
     loadNextEvent,
-    setClockTime,
     doEvent,
     incrementIterations,
     simulate,
