@@ -7,7 +7,6 @@ const {
   equals,
   identity,
   ifElse,
-  multiply,
   path,
   pipe,
 }  = require('ramda');
@@ -45,20 +44,31 @@ const eventNameEquals = name => pipe(
 const ifArrival = eventNameEquals('arrival');
 const ifDeparture = eventNameEquals('departure');
 
+const loadNextEvent = callMethodOverProp('events', 'doNext');
 const registerArrivalInModel = callMethodOverProp('model', 'arrival');
 const registerDepartureInModel = callMethodOverProp('model', 'departure');
 const evolveSeed = callMethodOverProp('randomSeed', 'evolve');
-const loadNextEvent = callMethodOverProp('events', 'doNext');
 const incrementIterations = callMethodOverProp('iterationCounter', 'increment');
 
-const scheduleEvent = callPathWithArg(['events', 'schedule']);
 const randomNatural = callPathWithArg(['randomSeed', 'natural']);
+const evolveRandomNatural = range => pipe(
+  evolveSeed,
+  randomNatural(range),
+);
 
-const minutesToMilliseconds = multiply(60000);
-
-// TODO: Parameterize initial values
+// TODO: Extract initial && default values to options module
 const initialEvent = { name: 'arrival', time: 0 };
+const interArrivalTimeRange = {
+  min: 2,
+  max: 20,
+};
+const serviceTimeRange = {
+  min: 3,
+  max: 17,
+};
 const initialSeed = NaN;
+
+const scheduleEvent = callPathWithArg(['events', 'schedule']);
 
 // TODO: Parameterize, reduce duplication
 const scheduleArrival = convergeSetProp(
@@ -68,13 +78,7 @@ const scheduleArrival = convergeSetProp(
       name: always('arrival'),
       time: converge(add, [
         currentEventTime,
-        pipe(
-          evolveSeed,
-          randomNatural({
-            min: minutesToMilliseconds(2),
-            max: minutesToMilliseconds(20),
-          }),
-        ),
+        evolveRandomNatural(interArrivalTimeRange),
       ]),
     }),
     identity,
@@ -89,13 +93,7 @@ const scheduleDeparture = convergeSetProp(
       name: always('departure'),
       time: converge(add, [
         currentEventTime,
-        pipe(
-          evolveSeed,
-          randomNatural({
-            min: minutesToMilliseconds(3),
-            max: minutesToMilliseconds(17),
-          }),
-        ),
+        evolveRandomNatural(serviceTimeRange),
       ]),
     }),
     identity,
