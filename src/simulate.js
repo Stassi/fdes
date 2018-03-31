@@ -61,43 +61,47 @@ const setClockTime = convergeSetProp('clock', useCurrentEventTimeAsClockTime);
 const scheduleEvent = callPathWithArg(['events', 'schedule']);
 const randomNatural = callPathWithArg(['randomSeed', 'natural']);
 
-const scheduleNextEvent = (name, interEventTime) => converge(scheduleEvent, [
-  applySpec({
-    name: always(name),
-    time: converge(add, [
-      interEventTime,
-      currentEventTime,
-    ]),
-  }),
-  identity,
-]);
-
 const minutesToMilliseconds = multiply(60000);
-
-// TODO: Parameterize
-const scheduleNextArrival = scheduleNextEvent(
-  'arrival',
-  randomNatural({
-    min: minutesToMilliseconds(2),
-    max: minutesToMilliseconds(20),
-  }),
-);
-
-// TODO: Parameterize
-const scheduleNextDeparture = scheduleNextEvent(
-  'departure',
-  randomNatural({
-    min: minutesToMilliseconds(3),
-    max: minutesToMilliseconds(17),
-  }),
-);
 
 // TODO: Parameterize initial values
 const initialEvent = { name: 'arrival', time: 0 };
 const initialSeed = NaN;
 
-const scheduleArrival = convergeSetProp('events', scheduleNextArrival);
-const scheduleDeparture = convergeSetProp('events', scheduleNextDeparture);
+// TODO: Parameterize, reduce duplication
+const scheduleArrival = convergeSetProp(
+  'events',
+  converge(scheduleEvent, [
+    applySpec({
+      name: always('arrival'),
+      time: converge(add, [
+        currentEventTime,
+        randomNatural({
+          min: minutesToMilliseconds(2),
+          max: minutesToMilliseconds(20),
+        }),
+      ]),
+    }),
+    identity,
+  ]),
+);
+
+// TODO: Parameterize, reduce duplication
+const scheduleDeparture = convergeSetProp(
+  'events',
+  converge(scheduleEvent, [
+    applySpec({
+      name: always('departure'),
+      time: converge(add, [
+        currentEventTime,
+        randomNatural({
+          min: minutesToMilliseconds(3),
+          max: minutesToMilliseconds(17),
+        }),
+      ]),
+    }),
+    identity,
+  ]),
+);
 
 const doArrival = pipe(
   registerArrivalInModel,
