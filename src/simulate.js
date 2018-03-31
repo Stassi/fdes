@@ -75,10 +75,13 @@ const scheduleArrival = convergeSetProp(
       name: always('arrival'),
       time: converge(add, [
         currentEventTime,
-        randomNatural({
-          min: minutesToMilliseconds(2),
-          max: minutesToMilliseconds(20),
-        }),
+        pipe(
+          evolveSeed,
+          randomNatural({
+            min: minutesToMilliseconds(2),
+            max: minutesToMilliseconds(20),
+          }),
+        ),
       ]),
     }),
     identity,
@@ -93,10 +96,13 @@ const scheduleDeparture = convergeSetProp(
       name: always('departure'),
       time: converge(add, [
         currentEventTime,
-        randomNatural({
-          min: minutesToMilliseconds(3),
-          max: minutesToMilliseconds(17),
-        }),
+        pipe(
+          evolveSeed,
+          randomNatural({
+            min: minutesToMilliseconds(3),
+            max: minutesToMilliseconds(17),
+          }),
+        ),
       ]),
     }),
     identity,
@@ -105,9 +111,7 @@ const scheduleDeparture = convergeSetProp(
 
 const doArrival = pipe(
   registerArrivalInModel,
-  evolveSeed,
   scheduleArrival,
-  evolveSeed,
   scheduleDeparture,
 );
 
