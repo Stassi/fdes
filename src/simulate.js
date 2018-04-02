@@ -14,6 +14,7 @@ const {
   events,
   iterationCounter,
   model,
+  options,
   randomSeed,
 } = require('./components');
 const {
@@ -56,7 +57,7 @@ const evolveRandomNatural = range => pipe(
   randomNatural(range),
 );
 
-// TODO: Extract initial && default values to options module
+// TODO: Replace usages with calls to options module
 const initialEvent = { name: 'arrival', time: 0 };
 const interArrivalTimeRange = {
   min: 2,
@@ -119,6 +120,7 @@ const simulate = (state = {
     .schedule(initialEvent),
   iterationCounter: iterationCounter(),
   model: model(),
+  options: options({}),
   randomSeed: randomSeed()(initialSeed),
 }) => ifElse(
   iterationLimitReached,
