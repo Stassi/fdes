@@ -1,4 +1,5 @@
 const {
+  always,
   defaultTo,
   keys,
   merge,
@@ -19,6 +20,7 @@ const options = pipe(
   defaultTo({}),
   pickKeys(defaults),
   merge(defaults),
+  always,
 );
 
 module.exports = { options };

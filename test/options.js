@@ -3,7 +3,7 @@ const { options } = require('../src/components/options');
 
 describe('options', () => {
   it('should return default values when provided no argument', () => {
-    const { seed, ...results } = options();
+    const { seed, ...results } = options()();
 
     expect(results).to.include({
       iterationLimit: 128,
@@ -22,7 +22,8 @@ describe('options', () => {
       meanServiceTime: 50,
       seed: 'arbitrary deterministic seed',
     };
+    const results = options(customParameters);
 
-    expect(options(customParameters)).to.include(customParameters);
+    expect(results()).to.include(customParameters);
   });
 });
