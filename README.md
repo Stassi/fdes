@@ -18,6 +18,12 @@ When applied to the domain of DES, Ramda creates the possibility of modeling sim
 
 Aside from a pseudo-random number generator, [Ramda is this library's _only_ production dependency](https://github.com/Stassi/fdes/compare/develop#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R13).
 
+## Installation
+To run the application, clone or extract this repository's contents to a machine with `Node.js` and `npm` installed. Then run this command in a terminal:
+```
+npm install
+```
+
 ## Testing
 Behavior-driven development (BDD) unit tests are powered by Chai and Mocha, and can be issued by running this command:
 
