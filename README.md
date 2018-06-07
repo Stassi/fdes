@@ -19,7 +19,9 @@ When applied to the domain of DES, Ramda creates the possibility of modeling sim
 Aside from a pseudo-random number generator, [Ramda is this library's _only_ production dependency](https://github.com/Stassi/fdes/compare/develop#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R13).
 
 ## Installation
-To run the application, clone or extract this repository's contents to a machine with `Node.js` and `npm` installed. Then run this command in a terminal:
+To run the application, clone or extract this repository's contents to a machine with `Node.js` and `npm` installed.
+
+Then run this command in a terminal:
 ```
 npm install
 ```
@@ -30,3 +32,14 @@ Behavior-driven development (BDD) unit tests are powered by Chai and Mocha, and 
 ```
 npm test
 ```
+
+## API
+### [`#simulate`](https://github.com/Stassi/fdes/blob/10699fc8fe67439c3b0960015c42fdd02247c4c1/src/simulate.js#L118)`( [options {}] )`
+option | type | description
+------ | ---- | -----------
+`iterationLimit` (default: `10`) | `Number` | The maximum number of iterations to simulate, instructing when the simulation should terminate.
+`meanInterArrivalTime` (default: `8`)** | `Number` | Determines the mean interarrival time of simulated agents (i.e.: bank customers, cars in traffic, passengers waiting for an elevator).
+`meanServiceTime` (default: `8`)** | `Number` | Determines the mean service time agents will wait (i.e.: processing a bank loan, time stopped at traffic light, vacant elevator car arrival).
+`seed` (default: `NaN`) | `String` | A reusable seed for repeating a **deterministic** simulation. If unprovided, the simulation becomes **non-deterministic** (pseudo-random), but the `seed` output can then be reused deterministically.
+
+**denotes *unitless* time, and may be interpreted as milliseconds, seconds, minutes, etc.
